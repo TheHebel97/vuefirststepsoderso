@@ -29,11 +29,7 @@ export default {
   data() {
     return {
       newTodo: "",
-      todos: [
-        {todo: "Einkaufen", done: false},
-        {todo: "Auskaufen", done: false},
-        {todo: "Fabians Reifen einbunkern", done: true},
-      ]
+      todos: []
     }
   },
 
@@ -43,12 +39,18 @@ export default {
   methods: {
     toggleDone(index) {
       this.todos[index].done = !this.todos[index].done;
+      this.storeTodos();
     },
     deleteTodo(index) {
       this.todos.splice(index, 1);
+      this.storeTodos();
     },
     addTodo() {
       this.todos.push({todo: this.newTodo, done: false})
+      this.storeTodos();
+    },
+    storeTodos() {
+      localStorage.setItem("todoApp", JSON.stringify(this.todos))
     },
   },
   computed: {
@@ -58,6 +60,15 @@ export default {
       });
       return openTodos;
     },
+  },
+  mounted() {
+    let data = JSON.parse(localStorage.getItem("todoApp"));
+    if (data !== "" && data !== null) {
+      this.todos = data;
+    } else {
+      this.todos = [];
+    }
+
   },
 }
 </script>
